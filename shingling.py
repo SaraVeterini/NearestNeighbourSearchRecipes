@@ -59,8 +59,6 @@ def shingling(list_of_files, scraping_function):
     # Create a dictionary of the documents, mapping the document identifier to the list of
     # shingle IDs that appear in the document.
     docShingleSets = dict()
-    # Maintain a list of all document IDs
-    docNames = list()
 
     t0 = time.time()
 
@@ -68,13 +66,28 @@ def shingling(list_of_files, scraping_function):
         # Read all the strings in the document.
         docstring = scraping_function(filename)
 
-        # Retrieve the recipe ID, which is the file name.
-        docID = filename
-        docNames.append(docID)
+        docShingles = DocShingles(filename, docstring)
+
+        # Store the completed list of shingles for this document in the dictionary.
+        docShingleSets[docShingles.docID] = docShingles.shinglesInDoc
+    t1 = time.time()
+    print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
+                                                                   SHINGLE_LENGTH,
+                                                                   t1 - t0)
+    return docShingleSets
+
+
+class DocShingles(object):
+    # This class represents a Document and its shingles.
+    def __init__(self, filename, docstring):
+        """
+        :param filename: paht of the document file.
+        :param docstring: the document represented as a single string.
+        """
 
         # 'shinglesInDoc' will hold all the unique shingle IDs present in the current
         # document. If a shingle ID occurs multiple times in the document, it will only
-        # appear once in the set (we'll use the propery of Python sets).
+        # appear once in the set (we'll use the property of Python sets).
         shinglesInDoc = set()
 
         # For each K character in the document
@@ -90,14 +103,10 @@ def shingling(list_of_files, scraping_function):
             # already contain it.
             shinglesInDoc.add(crc)
 
-        # Store the completed list of shingles for this document in the dictionary.
-        docShingleSets[docID] = shinglesInDoc
-    t1 = time.time()
-    print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
-                                                                   SHINGLE_LENGTH,
-                                                                   t1 - t0)
-    return docShingleSets
+        self.docID = filename
+        self.shinglesInDoc = shinglesInDoc
+
 
 if __name__ == '__main__':
     files = os.listdir(definitions.RECIPES_FOLDER)
-    print shingling(files[:10], scraping)
+    shingling(files[:10], scraping)
