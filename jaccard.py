@@ -1,3 +1,8 @@
+import os
+import definitions
+from shingling import scraping, shingling
+
+
 def compute_jaccard_index(set_1, set_2):
     n = len(set_1.intersection(set_2))
     return n / float(len(set_1) + len(set_2) - n)
@@ -12,5 +17,11 @@ class Jaccard(object):
         self.jaccard = compute_jaccard_index(shinglesFirstSet, shinglesSecondSet)
 
 if __name__ == '__main__':
-    jac = Jaccard(set([0, 1, 2, 3]), set([0, 2, 3, 4]))
-    print jac.jaccard
+    files = os.listdir(definitions.RECIPES_FOLDER)
+    map_shingles = shingling(files[:10], scraping)
+    for file1, list_of_file1 in map_shingles.iteritems():
+        for file2, list_of_file2 in map_shingles.iteritems():
+            if file1 < file2:
+                print file1+" "+file2
+                jac = Jaccard(list_of_file1, list_of_file2)
+                print jac.jaccard
