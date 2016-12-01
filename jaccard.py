@@ -17,8 +17,8 @@ class Jaccard(object):
         self.jaccard = compute_jaccard_index(shinglesFirstSet, shinglesSecondSet)
 
 if __name__ == '__main__':
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    map_shingles = shingling(files[:10], scraping)
+    files = ['applecharlotte_79046.html', 'applecharlotte_81084.html']
+    map_shingles = shingling(files, scraping)
     for file1, list_of_file1 in map_shingles.iteritems():
         for file2, list_of_file2 in map_shingles.iteritems():
             if file1 < file2:
