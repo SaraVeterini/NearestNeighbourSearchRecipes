@@ -38,6 +38,7 @@ def scraping(filename):
     cookTime = check_not_null(soup.find_all("p", class_='recipe-metadata__cook-time'))
     serving = check_not_null(soup.find_all("p", class_='recipe-metadata__serving'))
     dietary = check_not_null(soup.find_all("div", class_='recipe-metadata__dietary'))
+    description = check_not_null(soup.find_all("div", class_='recipe-description'))
 
     ingredients = check_not_null(soup.find_all("div", class_='recipe-ingredients-wrapper'))
     ingredients = re.sub('\s+', ' ', ingredients.strip().lstrip('Ingredients').lstrip())
@@ -48,8 +49,9 @@ def scraping(filename):
     f.close()
 
     aggr = title + '\n' + ingredients + '\n' + author + '\n' + prepTime + '\n' + \
-           cookTime + '\n' + serving + '\n' + method + '\n' + dietary
+           cookTime + '\n' + serving + '\n' + method + '\n' + dietary + '\n' + description
     aggr = unicodedata.normalize('NFKD', aggr).encode('ASCII', 'ignore')
+    # print aggr
     return aggr
 
 
@@ -110,16 +112,19 @@ class DocShingles(object):
 
 
 if __name__ == '__main__':
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    fr = shingling(files[:100], scraping, hashed=False)
-    tr = shingling(files[:100], scraping, hashed=True)
+    # files = os.listdir(definitions.RECIPES_FOLDER)
+    files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
+    fr = shingling(files, scraping, hashed=False)
+    print fr
+    # tr = shingling(files, scraping, hashed=True)
 
     cf = 0
     for i in fr.keys():
         cf += len(fr[i])
     ct = 0
-    for i in tr.keys():
+    '''for i in tr.keys():
         ct += len(tr[i])
 
     print cf
-    print ct
+    print ct'''
+    print cf
