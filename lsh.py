@@ -30,19 +30,35 @@ class Lsh(object):
                 if doc_id2 > doc_id1:
                     # iterate over bands
                     for i in range(0, B):
-                        print minhash_list1[i*R:(i+1)*R]
-                        print minhash_list2[i*R:(i+1)*R]
+                        #print minhash_list1[i*R:(i+1)*R]
+                        #print minhash_list2[i*R:(i+1)*R]
                         # calculate hashes for each document
                         hash_doc1 = compute_hash(minhash_list1[i*R:(i+1)*R])
                         hash_doc2 = compute_hash(minhash_list2[i*R:(i+1)*R])
                         # 2 documents are candidates if their subvector is the same in at least one band
                         if hash_doc1 == hash_doc2:
+                            print doc_id1
+                            print doc_id2
+                            print minhash_list1
+                            print minhash_list2
                             candidates_list.append((doc_id1, doc_id2))
                             break
         print candidates_list
 
+        # now we check the effective similarity, to be compared with jaccard one
+        for (doc1, doc2) in candidates_list:
+            count = 0
+            for k in range(0, len(minhash_list1)):
+                # print signature1[k]
+                # print signature2[k]
+                count += ((minhash_map[doc1])[k] == (minhash_map[doc2])[k])
+                # print 'count: ', count
+
+            print "  %5s --> %5s   %.2f" % (doc1, doc2, (float(count) / float(len(minhash_list1))))
+
+
 if __name__ == '__main__':
-    files = ['breast_of_lamb_baked_80591.html', 'breast_of_lamb_with_53662.html']
-    dictionary_of_shingles = shingling.shingling(files, shingling.scraping, hashed=True)
+    files = os.listdir(definitions.RECIPES_FOLDER)
+    dictionary_of_shingles = shingling.shingling(files[:1000], shingling.scraping, hashed=True)
     map_minhash = minhash.DocMinHashSignatures(dictionary_of_shingles, 10).minHashDocuments
     Lsh(map_minhash)

@@ -17,7 +17,7 @@ class Jaccard(object):
         self.jaccard = compute_jaccard_index(shinglesFirstSet, shinglesSecondSet)
 
 if __name__ == '__main__':
-    files = ['applecharlotte_79046.html', 'applecharlotte_81084.html']
+    files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
     map_shingles = shingling(files, scraping)
     for file1, list_of_file1 in map_shingles.iteritems():
         for file2, list_of_file2 in map_shingles.iteritems():
