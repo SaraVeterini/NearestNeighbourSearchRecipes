@@ -27,23 +27,28 @@ class Lsh(object):
         candidates_list = list()
         for doc_id1, minhash_list1 in minhash_map.iteritems():
             for doc_id2, minhash_list2 in minhash_map.iteritems():
+                match = 0
                 if doc_id2 > doc_id1:
                     # iterate over bands
                     for i in range(0, B):
-                        #print minhash_list1[i*R:(i+1)*R]
-                        #print minhash_list2[i*R:(i+1)*R]
+                        # print minhash_list1[i*R:(i+1)*R]
+                        # print minhash_list2[i*R:(i+1)*R]
                         # calculate hashes for each document
                         hash_doc1 = compute_hash(minhash_list1[i*R:(i+1)*R])
                         hash_doc2 = compute_hash(minhash_list2[i*R:(i+1)*R])
                         # 2 documents are candidates if their subvector is the same in at least one band
                         if hash_doc1 == hash_doc2:
+                            match += 1
                             print doc_id1
                             print doc_id2
                             print minhash_list1
                             print minhash_list2
                             candidates_list.append((doc_id1, doc_id2))
                             break
-        print candidates_list
+                    if match == 0:
+                        print "No match between " + doc_id1 + " and " + doc_id2
+
+        print "Candidates list: "+str(candidates_list)
 
         # now we check the effective similarity, to be compared with jaccard one
         for (doc1, doc2) in candidates_list:

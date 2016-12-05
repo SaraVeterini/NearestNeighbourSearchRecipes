@@ -1,5 +1,5 @@
 # ======== shingling ========
-# This code represent each document as a set of shingles.
+# This code represents each document as a set of shingles.
 # The shingles are formed by combining K consecutive characters together.
 # Shingles are mapped to shingle IDs using some hash function.
 
@@ -11,6 +11,11 @@ import string
 import hashlib
 import unicodedata
 from bs4 import BeautifulSoup
+
+import sys
+sys.path.append('utils')
+from utils.loader import save_binary_file, load_binary_file
+
 
 import definitions
 
@@ -57,6 +62,12 @@ def scraping(filename):
 
 # Shingling function that shingle all documents by K characters and hash them.
 def shingling(list_of_files, scraping_function, hashed=True):
+
+    # TODO Check whether the shingles set has been already built.
+    docShingleSets = load_binary_file(definitions.SHINGLES_FILE)
+    if docShingleSets is not None:
+        return docShingleSets
+
     print 'Shingling Documents...'
 
     # Create a dictionary of the documents, mapping the document identifier to the list of
@@ -81,6 +92,10 @@ def shingling(list_of_files, scraping_function, hashed=True):
     print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
                                                                    SHINGLE_LENGTH,
                                                                    t1 - t0)
+    # TODO Store the shingles in a file for future uses, then return them.
+    if not os.path.exists(definitions.FILE_DIR):
+        os.makedirs(definitions.FILE_DIR)
+    save_binary_file(docShingleSets, definitions.SHINGLES_FILE)
     return docShingleSets
 
 
@@ -112,10 +127,11 @@ class DocShingles(object):
 
 
 if __name__ == '__main__':
-    # files = os.listdir(definitions.RECIPES_FOLDER)
-    files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
+    files = os.listdir(definitions.RECIPES_FOLDER)
+    # files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
     fr = shingling(files, scraping, hashed=False)
     print fr
+
     # tr = shingling(files, scraping, hashed=True)
 
     cf = 0

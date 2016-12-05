@@ -1,6 +1,15 @@
 # ===== Generate MinHash Signatures ===== #
+import io
+import os
+
 import time
 import hashlib
+
+import definitions
+
+import sys
+sys.path.append('utils')
+from utils.loader import save_binary_file, load_binary_file
 
 
 def hash_family(n):
@@ -17,6 +26,11 @@ def hash_family(n):
 class DocMinHashSignatures(object):
     def __init__(self, dictionary_of_set, numHashes):
         print '\nGenerating MinHash signatures for all documents...'
+
+        # TODO Check whether the signatures have been already computed.
+        signatures = load_binary_file(definitions.SIGNATURES_FILE)
+        if signatures is not None:
+            self.minHashDocuments = signatures
 
         # List of docs represented as signature vectors
         signatures = dict()
@@ -61,6 +75,10 @@ class DocMinHashSignatures(object):
         print '\nGenerated %d signatures for %d documents in %f' \
               % (numHashes, len(dictionary_of_set.keys()), elapsed)
 
+        # TODO Store signatures in a file for future uses.
+        if not os.path.exists(definitions.FILE_DIR):
+            os.makedirs(definitions.FILE_DIR)
+        save_binary_file(signatures, definitions.SIGNATURES_FILE)
         self.minHashDocuments = signatures
 
 
