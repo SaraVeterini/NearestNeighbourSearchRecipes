@@ -40,3 +40,4 @@ if __name__ == '__main__':
     shingles_map = shingling(files[:1000], scraping, hashed=False)
     cand = Jaccard(shingles_map).jaccardCandidates
     print cand
+    print len(cand)
