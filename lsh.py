@@ -35,8 +35,23 @@ class Lsh(object):
                             break
 
         print "Candidates list: "+str(candidates_list)
-
         self.lshCandidates = candidates_list
+
+        file_result_lsh = open("lsh_result.txt", 'wb+')
+        estimate_jaccard_list = list()
+        counter = 0
+        for (doc_1, doc_2) in candidates_list:
+            for i in range(len(minhash_list1)):
+                if minhash_map[doc_1][i] == minhash_map[doc_2][i]:
+                    counter += 1
+            if counter/len(minhash_list1) >= 0.8:
+                estimate_jaccard_list.append((doc_1, doc_2))
+                file_result_lsh.write(str((doc_1, doc_2)))
+        self.lsh_neighbours = estimate_jaccard_list
+
+
+
+
 
 
 if __name__ == '__main__':

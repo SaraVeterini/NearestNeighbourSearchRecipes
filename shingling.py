@@ -82,6 +82,7 @@ def shingling(list_of_files, scraping_function, hashed=True):
     t0 = time.time()
 
     for filename in list_of_files:
+        print filename
         # Read all the strings in the document.
         docstring = scraping_function(filename)
 

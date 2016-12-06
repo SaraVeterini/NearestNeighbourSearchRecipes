@@ -11,6 +11,7 @@ import sys
 sys.path.append('utils')
 from utils.loader import save_binary_file, load_binary_file
 
+N = 10
 
 def hash_family(n):
     resultSize = 8
@@ -24,7 +25,7 @@ def hash_family(n):
 
 
 class DocMinHashSignatures(object):
-    def __init__(self, dictionary_of_set, numHashes):
+    def __init__(self, dictionary_of_set, numHashes=N):
         print '\nGenerating MinHash signatures for all documents...'
 
         # Check whether the signatures have been already computed.

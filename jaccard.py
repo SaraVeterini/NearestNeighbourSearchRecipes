@@ -16,15 +16,16 @@ class Jaccard(object):
         :param shingles_map: dictionary of shingles.
         """
         print '\nComputing Jaccard Similarity...'
+        file_result_jaccard = open("jaccard_result.txt", 'wb+')
         t0 = time.time()
         cand = []
         for key1 in shingles_map:
             for key2 in shingles_map:
                 if key2 > key1:
-                    continue
-                sim = compute_jaccard_index(shingles_map[key1], shingles_map[key2])
-                if sim >= 0.8:
-                    cand.append((key1, key2))
+                    sim = compute_jaccard_index(shingles_map[key1], shingles_map[key2])
+                    if sim >= 0.8:
+                        cand.append((key1, key2))
+                        file_result_jaccard.write(str((key1, key2)))
         elapsed = time.time() - t0
         print 'Jaccard similarity of %d documents computed in %f' % (len(shingles_map.keys()), elapsed)
         self.jaccardCandidates = cand
@@ -36,6 +37,6 @@ if __name__ == '__main__':
     from shingling import scraping, shingling
 
     files = os.listdir(definitions.RECIPES_FOLDER)
-    shingles_map = shingling(files[2000:4000], scraping, hashed=False)
+    shingles_map = shingling(files[:1000], scraping, hashed=False)
     cand = Jaccard(shingles_map).jaccardCandidates
     print cand
