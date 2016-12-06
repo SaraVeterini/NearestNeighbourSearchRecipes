@@ -19,6 +19,7 @@ class Jaccard(object):
         file_result_jaccard = open("jaccard_result.txt", 'wb+')
         t0 = time.time()
         cand = []
+
         for key1 in shingles_map:
             for key2 in shingles_map:
                 if key2 > key1:

@@ -6,6 +6,7 @@ def compare():
     from jaccard import Jaccard
     from lsh import Lsh
 
+
     files = os.listdir(definitions.RECIPES_FOLDER)
     shingles_map = shingling(files, scraping, hashed=True)
     jaccard_list = Jaccard(shingles_map).jaccardCandidates

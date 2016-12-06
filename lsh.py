@@ -21,6 +21,7 @@ def compute_hash(vector):
 class Lsh(object):
     def __init__(self, minhash_map):
         candidates_list = list()
+
         for doc_id1, minhash_list1 in minhash_map.iteritems():
             for doc_id2, minhash_list2 in minhash_map.iteritems():
                 if doc_id2 > doc_id1:
