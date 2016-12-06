@@ -64,11 +64,16 @@ def scraping(filename):
 def shingling(list_of_files, scraping_function, hashed=True):
 
     # Check whether the shingles set has been already built.
-    docShingleSets = load_binary_file(definitions.SHINGLES_FILE)
+    if hashed:
+        docShingleSets = load_binary_file(definitions.HASHED_SHINGLES_FILE)
+    else:
+        docShingleSets = load_binary_file(definitions.SHINGLES_FILE)
+
     if docShingleSets is not None:
+        print 'Shingles loaded.'
         return docShingleSets
 
-    print 'Shingling Documents...'
+    print '\nShingling Documents...'
 
     # Create a dictionary of the documents, mapping the document identifier to the list of
     # shingle IDs that appear in the document.
@@ -95,7 +100,11 @@ def shingling(list_of_files, scraping_function, hashed=True):
     # Store the shingles in a file for future uses, then return them.
     if not os.path.exists(definitions.FILE_DIR):
         os.makedirs(definitions.FILE_DIR)
-    save_binary_file(docShingleSets, definitions.SHINGLES_FILE)
+
+    if hashed:
+        save_binary_file(docShingleSets, definitions.HASHED_SHINGLES_FILE)
+    else:
+        save_binary_file(docShingleSets, definitions.SHINGLES_FILE)
 
     return docShingleSets
 
@@ -122,15 +131,6 @@ class DocShingles(object):
     def hash_shingles(self):
         hashed_shingles = set()
         for sh in self.shinglesInDoc:
-            hashed_shingles.add(hashlib.md5(sh).hexdigest()[:24])
+            hashed_shingles.add(hashlib.md5(sh).hexdigest()[:16])
             # hashed_shingles.add(binascii.crc32(sh) & 0xffffffff)
         return hashed_shingles
-
-
-if __name__ == '__main__':
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    sd = shingling(files[:10], scraping, hashed=True)
-
-    for k, v in sd.iteritems():
-        print k
-        print v

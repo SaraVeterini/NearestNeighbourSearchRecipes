@@ -1,28 +1,41 @@
-import os
-import definitions
-from shingling import scraping, shingling
+import time
 
 
 def compute_jaccard_index(set_1, set_2):
     n = len(set_1.intersection(set_2))
-    return n / float(len(set_1.union(set_2)))
-
+    return n / float(len(set_1) + len(set_2) - n)
 
 
 class Jaccard(object):
-    def __init__(self, shinglesFirstSet, shinglesSecondSet):
+    def __init__(self, shingles_map):
         """
-            :param shinglesFirstSet: shingles of first set.
-            :param shinglesSecondSet: shingles of second set.
+        implement a class that given the shingles of each of the documents, finds the
+        nearest neighbors by comparing all the shingle sets with each other, using
+        the Jaccard similarity.
+
+        :param shingles_map: dictionary of shingles.
         """
-        self.jaccard = compute_jaccard_index(shinglesFirstSet, shinglesSecondSet)
+        print '\nComputing Jaccard Similarity...'
+        t0 = time.time()
+        cand = []
+        for key1 in shingles_map:
+            for key2 in shingles_map:
+                if key2 > key1:
+                    continue
+                sim = compute_jaccard_index(shingles_map[key1], shingles_map[key2])
+                if sim >= 0.8:
+                    cand.append((key1, key2))
+        elapsed = time.time() - t0
+        print 'Jaccard similarity of %d documents computed in %f' % (len(shingles_map.keys()), elapsed)
+        self.jaccardCandidates = cand
+
 
 if __name__ == '__main__':
+    import os
+    import definitions
+    from shingling import scraping, shingling
+
     files = os.listdir(definitions.RECIPES_FOLDER)
-    map_shingles = shingling(files, scraping)
-    for file1, list_of_file1 in map_shingles.iteritems():
-        for file2, list_of_file2 in map_shingles.iteritems():
-            if file1 < file2:
-                jac = Jaccard(list_of_file1, list_of_file2)
-                if jac.jaccard >= 0.80:
-                    print "  %5s --> %5s   %.2f" % (file1, file2, jac.jaccard)
+    shingles_map = shingling(files[2000:4000], scraping, hashed=False)
+    cand = Jaccard(shingles_map).jaccardCandidates
+    print cand
