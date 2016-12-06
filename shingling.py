@@ -12,8 +12,8 @@ import hashlib
 import unicodedata
 from bs4 import BeautifulSoup
 
-import sys
-sys.path.append('utils')
+# import sys
+# sys.path.append('utils')
 from utils.loader import save_binary_file, load_binary_file
 
 
@@ -63,7 +63,7 @@ def scraping(filename):
 # Shingling function that shingle all documents by K characters and hash them.
 def shingling(list_of_files, scraping_function, hashed=True):
 
-    # TODO Check whether the shingles set has been already built.
+    # Check whether the shingles set has been already built.
     docShingleSets = load_binary_file(definitions.SHINGLES_FILE)
     if docShingleSets is not None:
         return docShingleSets
@@ -92,10 +92,11 @@ def shingling(list_of_files, scraping_function, hashed=True):
     print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
                                                                    SHINGLE_LENGTH,
                                                                    t1 - t0)
-    # TODO Store the shingles in a file for future uses, then return them.
+    # Store the shingles in a file for future uses, then return them.
     if not os.path.exists(definitions.FILE_DIR):
         os.makedirs(definitions.FILE_DIR)
     save_binary_file(docShingleSets, definitions.SHINGLES_FILE)
+
     return docShingleSets
 
 
@@ -128,19 +129,8 @@ class DocShingles(object):
 
 if __name__ == '__main__':
     files = os.listdir(definitions.RECIPES_FOLDER)
-    # files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
-    fr = shingling(files, scraping, hashed=False)
-    print fr
+    sd = shingling(files[:10], scraping, hashed=True)
 
-    # tr = shingling(files, scraping, hashed=True)
-
-    cf = 0
-    for i in fr.keys():
-        cf += len(fr[i])
-    ct = 0
-    '''for i in tr.keys():
-        ct += len(tr[i])
-
-    print cf
-    print ct'''
-    print cf
+    for k, v in sd.iteritems():
+        print k
+        print v
