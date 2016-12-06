@@ -5,7 +5,8 @@ from shingling import scraping, shingling
 
 def compute_jaccard_index(set_1, set_2):
     n = len(set_1.intersection(set_2))
-    return n / float(len(set_1) + len(set_2) - n)
+    return n / float(len(set_1.union(set_2)))
+
 
 
 class Jaccard(object):
@@ -17,11 +18,11 @@ class Jaccard(object):
         self.jaccard = compute_jaccard_index(shinglesFirstSet, shinglesSecondSet)
 
 if __name__ == '__main__':
-    files = ['beef_bourguignon_09721.html', 'beef_bourguignon_with_89401.html']
+    files = os.listdir(definitions.RECIPES_FOLDER)
     map_shingles = shingling(files, scraping)
     for file1, list_of_file1 in map_shingles.iteritems():
         for file2, list_of_file2 in map_shingles.iteritems():
             if file1 < file2:
-                print file1+" "+file2
                 jac = Jaccard(list_of_file1, list_of_file2)
-                print jac.jaccard
+                if jac.jaccard >= 0.80:
+                    print "  %5s --> %5s   %.2f" % (file1, file2, jac.jaccard)
