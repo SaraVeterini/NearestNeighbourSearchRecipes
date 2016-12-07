@@ -73,7 +73,7 @@ class DocMinHashSignatures(object):
 
             elapsed = time.time() - t0
 
-            print 'Generated %d signatures for %d documents in %f seconds' \
+            print '\nGenerated %d signatures for %d documents in %f seconds' \
                   % (numHashes, len(dictionary_of_set.keys()), elapsed)
 
             # Store signatures in a file for future uses.
