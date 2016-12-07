@@ -1,17 +1,13 @@
 # ===== Generate MinHash Signatures ===== #
-import io
-import os
-
 import time
 import hashlib
 
 import definitions
 
-import sys
-sys.path.append('utils')
 from utils.loader import save_binary_file, load_binary_file
 
 N = 10
+
 
 def hash_family(n):
     resultSize = 8
@@ -89,7 +85,6 @@ class DocMinHashSignatures(object):
 
 if __name__ == '__main__':
     import os
-    import definitions
     import shingling
 
     print '# ===== ===== #'

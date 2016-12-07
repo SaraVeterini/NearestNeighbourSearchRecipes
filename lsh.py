@@ -1,3 +1,6 @@
+import time
+
+import definitions
 
 ''' B is the number of bands
     R is the number of rows in each band.
@@ -22,6 +25,7 @@ class Lsh(object):
     def __init__(self, minhash_map):
         candidates_list = list()
 
+        t0 = time.time()
         for doc_id1, minhash_list1 in minhash_map.iteritems():
             for doc_id2, minhash_list2 in minhash_map.iteritems():
                 if doc_id2 > doc_id1:
@@ -35,10 +39,11 @@ class Lsh(object):
                             candidates_list.append((doc_id1, doc_id2))
                             break
 
-        print "Candidates list: "+str(candidates_list)
+        t1 = time.time() - t0
+        print 'Time to compute LSH candidates: %f' % t1
         self.lshCandidates = candidates_list
 
-        file_result_lsh = open("lsh_result.txt", 'wb+')
+        file_result_lsh = open(definitions.LSH_RESULTS, 'w')
         estimate_jaccard_list = list()
         counter = 0
         for (doc_1, doc_2) in candidates_list:
@@ -48,7 +53,12 @@ class Lsh(object):
             if counter/len(minhash_list1) >= 0.8:
                 estimate_jaccard_list.append((doc_1, doc_2))
                 file_result_lsh.write(str((doc_1, doc_2)))
-        self.lsh_neighbours = estimate_jaccard_list
+
+        t2 = time.time() - t0
+        file_result_lsh.close()
+        print 'Time to compute LSH neighbours: %f' % t2
+        self.lshNeighbours = estimate_jaccard_list
+
 
 
 
