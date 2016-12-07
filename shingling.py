@@ -62,6 +62,7 @@ def scraping(filename):
 
 # Shingling function that shingle all documents by K characters and hash them.
 def shingling(list_of_files, scraping_function, hashed=True):
+    print '\nShingling Documents...'
 
     # Check whether the shingles set has been already built.
     if hashed:
@@ -73,8 +74,6 @@ def shingling(list_of_files, scraping_function, hashed=True):
         print 'Shingles loaded.'
         return docShingleSets
 
-    print '\nShingling Documents...'
-
     # Create a dictionary of the documents, mapping the document identifier to the list of
     # shingle IDs that appear in the document.
     docShingleSets = dict()
@@ -82,10 +81,8 @@ def shingling(list_of_files, scraping_function, hashed=True):
     t0 = time.time()
 
     for filename in list_of_files:
-        print filename
         # Read all the strings in the document.
         docstring = scraping_function(filename)
-
         docShingles = DocShingles(filename, docstring)
 
         # Store the completed list of shingles for this document in the dictionary.
@@ -95,9 +92,9 @@ def shingling(list_of_files, scraping_function, hashed=True):
             docShingleSets[docShingles.docID] = docShingles.shinglesInDoc
 
     t1 = time.time()
-    print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
-                                                                   SHINGLE_LENGTH,
-                                                                   t1 - t0)
+    print 'Time to Shingling %d documents ' \
+          'by %d characters: %f seconds' % (len(list_of_files), SHINGLE_LENGTH, t1 - t0)
+
     # Store the shingles in a file for future uses, then return them.
     if not os.path.exists(definitions.FILE_DIR):
         os.makedirs(definitions.FILE_DIR)
@@ -132,6 +129,5 @@ class DocShingles(object):
     def hash_shingles(self):
         hashed_shingles = set()
         for sh in self.shinglesInDoc:
-            hashed_shingles.add(int(hashlib.md5(sh).hexdigest()[:16], 16))
-            # hashed_shingles.add(binascii.crc32(sh) & 0xffffffff)
+            hashed_shingles.add(int(hashlib.md5(sh).hexdigest()[-16:], 16))
         return hashed_shingles

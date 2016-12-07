@@ -32,17 +32,5 @@ class Jaccard(object):
 
         file_result_jaccard.close()
         elapsed = time.time() - t0
-        print 'Jaccard similarity of %d documents computed in %f' % (len(shingles_map.keys()), elapsed)
+        print 'Jaccard similarity of %d documents computed in %f seconds' % (len(shingles_map.keys()), elapsed)
         self.jaccardNeighbours = neigh
-
-
-if __name__ == '__main__':
-    import os
-    import definitions
-    from shingling import scraping, shingling
-
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    shingles_map = shingling(files[:1000], scraping, hashed=False)
-    cand = Jaccard(shingles_map).jaccardNeighbours
-    print cand
-    print len(cand)
