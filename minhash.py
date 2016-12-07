@@ -16,7 +16,7 @@ def hash_family(n):
     salt = str(n).zfill(maxLen)[-maxLen:]
 
     def hashMember(x):
-        return int(hashlib.sha1(x + salt).hexdigest()[-resultSize:], 16)
+        return int(hashlib.sha1(x + salt).hexdigest()[-(resultSize * 2):], 16)
 
     return hashMember
 
