@@ -40,7 +40,7 @@ class Lsh(object):
                             break
 
         t1 = time.time() - t0
-        print 'Time to compute LSH candidates: %f' % t1
+        print 'Time to compute LSH candidates: %f seconds' % t1
         self.lshCandidates = candidates_list
 
         file_result_lsh = open(definitions.LSH_RESULTS, 'w')
@@ -56,22 +56,5 @@ class Lsh(object):
 
         t2 = time.time() - t0
         file_result_lsh.close()
-        print 'Time to compute LSH neighbours: %f' % t2
+        print 'Time to compute LSH neighbours: %f seconds' % t2
         self.lshNeighbours = estimate_jaccard_list
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    import os
-    import definitions
-    import shingling
-    import minhash
-
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    dictionary_of_shingles = shingling.shingling(files[2000:4000], shingling.scraping, hashed=True)
-    map_minhash = minhash.DocMinHashSignatures(dictionary_of_shingles, 100).minHashDocuments
-    Lsh(map_minhash)

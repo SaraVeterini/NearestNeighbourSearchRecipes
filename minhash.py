@@ -1,4 +1,5 @@
 # ===== Generate MinHash Signatures ===== #
+import os
 import time
 import hashlib
 
@@ -72,7 +73,7 @@ class DocMinHashSignatures(object):
 
             elapsed = time.time() - t0
 
-            print '\nGenerated %d signatures for %d documents in %f' \
+            print '\nGenerated %d signatures for %d documents in %f seconds' \
                   % (numHashes, len(dictionary_of_set.keys()), elapsed)
 
             # Store signatures in a file for future uses.
@@ -81,14 +82,3 @@ class DocMinHashSignatures(object):
             save_binary_file(signatures, definitions.SIGNATURES_FILE)
 
             self.minHashDocuments = signatures
-
-
-if __name__ == '__main__':
-    import os
-    import shingling
-
-    print '# ===== ===== #'
-    files = os.listdir(definitions.RECIPES_FOLDER)
-    dictionary_of_shingles = shingling.shingling(files[:100], shingling.scraping, hashed=True)
-    sign = DocMinHashSignatures(dictionary_of_shingles, 15)
-    print sign.minHashDocuments

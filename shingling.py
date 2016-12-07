@@ -82,10 +82,8 @@ def shingling(list_of_files, scraping_function, hashed=True):
     t0 = time.time()
 
     for filename in list_of_files:
-        print filename
         # Read all the strings in the document.
         docstring = scraping_function(filename)
-
         docShingles = DocShingles(filename, docstring)
 
         # Store the completed list of shingles for this document in the dictionary.
@@ -95,9 +93,9 @@ def shingling(list_of_files, scraping_function, hashed=True):
             docShingleSets[docShingles.docID] = docShingles.shinglesInDoc
 
     t1 = time.time()
-    print 'Time to Shingling %d documents by %d characters: %f' % (len(list_of_files),
-                                                                   SHINGLE_LENGTH,
-                                                                   t1 - t0)
+    print 'Time to Shingling %d documents ' \
+          'by %d characters: %f seconds' % (len(list_of_files), SHINGLE_LENGTH, t1 - t0)
+
     # Store the shingles in a file for future uses, then return them.
     if not os.path.exists(definitions.FILE_DIR):
         os.makedirs(definitions.FILE_DIR)
