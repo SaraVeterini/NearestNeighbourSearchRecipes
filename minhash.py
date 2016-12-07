@@ -16,7 +16,7 @@ def hash_family(n):
     salt = str(n).zfill(maxLen)[-maxLen:]
 
     def hashMember(x):
-        return int(hashlib.sha1(x + salt).hexdigest()[-resultSize:], 16)
+        return hashlib.sha1(x + salt).digest()[-resultSize:]
 
     return hashMember
 
@@ -30,7 +30,7 @@ class DocMinHashSignatures(object):
 
         if signatures is not None:
             self.minHashDocuments = signatures
-            print 'MinHash signatures loaded'
+            print 'MinHash signatures loaded.'
 
         else:
             # List of docs represented as signature vectors
@@ -73,7 +73,7 @@ class DocMinHashSignatures(object):
 
             elapsed = time.time() - t0
 
-            print '\nGenerated %d signatures for %d documents in %f seconds' \
+            print 'Generated %d signatures for %d documents in %f seconds' \
                   % (numHashes, len(dictionary_of_set.keys()), elapsed)
 
             # Store signatures in a file for future uses.

@@ -22,13 +22,14 @@ class Jaccard(object):
         t0 = time.time()
         neigh = []
 
-        for key1 in shingles_map:
-            for key2 in shingles_map:
+        for key1, set1 in shingles_map.iteritems():
+            for key2, set2 in shingles_map.iteritems():
                 if key2 > key1:
-                    sim = compute_jaccard_index(shingles_map[key1], shingles_map[key2])
+                    n = len(set1.intersection(set2))
+                    sim = n / float(len(set1) + len(set2) - n)
                     if sim >= 0.8:
                         neigh.append((key1, key2))
-                        file_result_jaccard.write(str((key1, key2)))
+                        file_result_jaccard.write(str((key1, key2)) + '\n')
 
         file_result_jaccard.close()
         elapsed = time.time() - t0

@@ -17,10 +17,6 @@ B = 2
 R = 5
 
 
-def compute_hash(vector):
-    return hash(str(vector))
-
-
 class Lsh(object):
     def __init__(self, minhash_map):
         print '\nComputing LSH...'
@@ -33,8 +29,8 @@ class Lsh(object):
                     # iterate over bands
                     for i in range(0, B):
                         # calculate hashes for each document
-                        hash_doc1 = compute_hash(minhash_list1[i*R:(i+1)*R])
-                        hash_doc2 = compute_hash(minhash_list2[i*R:(i+1)*R])
+                        hash_doc1 = hash(str(minhash_list1[i*R:(i+1)*R]))
+                        hash_doc2 = hash(str(minhash_list2[i*R:(i+1)*R]))
                         # 2 documents are candidates if their subvector is the same in at least one band
                         if hash_doc1 == hash_doc2:
                             candidates_list.append((doc_id1, doc_id2))
@@ -47,13 +43,14 @@ class Lsh(object):
         file_result_lsh = open(definitions.LSH_RESULTS, 'w')
         estimate_jaccard_list = list()
         counter = 0
+
         for (doc_1, doc_2) in candidates_list:
             for i in range(len(minhash_list1)):
                 if minhash_map[doc_1][i] == minhash_map[doc_2][i]:
                     counter += 1
             if counter/len(minhash_list1) >= 0.8:
                 estimate_jaccard_list.append((doc_1, doc_2))
-                file_result_lsh.write(str((doc_1, doc_2)))
+                file_result_lsh.write(str((doc_1, doc_2)) + '\n')
 
         t2 = time.time() - t0
         file_result_lsh.close()

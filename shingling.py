@@ -129,5 +129,5 @@ class DocShingles(object):
     def hash_shingles(self):
         hashed_shingles = set()
         for sh in self.shinglesInDoc:
-            hashed_shingles.add(int(hashlib.md5(sh).hexdigest()[-16:], 16))
+            hashed_shingles.add(hashlib.md5(sh).digest()[-8:])
         return hashed_shingles
