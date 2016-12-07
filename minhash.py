@@ -1,6 +1,7 @@
 # ===== Generate MinHash Signatures ===== #
 import os
 import time
+import struct
 import hashlib
 
 import definitions
@@ -16,7 +17,7 @@ def hash_family(n):
     salt = str(n).zfill(maxLen)[-maxLen:]
 
     def hashMember(x):
-        return hashlib.sha1(x + salt).digest()[-resultSize:]
+        return int(hashlib.sha1(x + salt).hexdigest()[-resultSize:], 16)
 
     return hashMember
 
