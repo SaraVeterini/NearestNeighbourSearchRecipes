@@ -1,18 +1,19 @@
 # ===== Generate MinHash Signatures ===== #
 import os
+import sys
 import time
-import struct
+import random
 import hashlib
 
 import definitions
-
 from utils.loader import save_binary_file, load_binary_file
 
 N = 10
+random.seed(123)
 
 
 def hash_family(n):
-    resultSize = 8
+    resultSize = 16
     maxLen = 20
     salt = str(n).zfill(maxLen)[-maxLen:]
 
@@ -23,13 +24,13 @@ def hash_family(n):
 
 
 class DocMinHashSignatures(object):
-    def __init__(self, dictionary_of_set, numHashes=N):
+    def __init__(self, dictionary_of_set, numHashes=N, saveFile=True):
         print '\nGenerating MinHash signatures for all documents...'
 
         # Check whether the signatures have been already computed.
         signatures = load_binary_file(definitions.SIGNATURES_FILE)
 
-        if signatures is not None:
+        if saveFile and (signatures is not None):
             self.minHashDocuments = signatures
             print 'MinHash signatures loaded.'
 
@@ -39,6 +40,7 @@ class DocMinHashSignatures(object):
 
             t0 = time.time()
             # For each document...
+            seeds = [random.randint(1, sys.maxint - 1) for i in range(numHashes)]
             for docID in dictionary_of_set.keys():
 
                 # Get the shingle set for this document.
@@ -50,9 +52,9 @@ class DocMinHashSignatures(object):
                 # For each hash function...
                 for i in range(0, numHashes):
 
-                    # For each of the shingles actually in the document, calculate its hash code
-                    # using hash function 'i'.
-                    hash_function = hash_family(i)
+                    # For each of the shingles actually in the document,
+                    # calculate its hash code using hash function 'i'.
+                    hash_function = hash_family(seeds[i])
 
                     # Initialize 'minHashCode' to positive infinity.
                     minHashCode = float('inf')
