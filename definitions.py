@@ -10,6 +10,8 @@ SHINGLES_FILE = os.path.join(FILE_DIR, 'shingles.p')
 
 SIGNATURES_FILE = os.path.join(FILE_DIR, 'signatures.p')
 
+JACCARD_FILE = os.path.join(FILE_DIR, 'jaccard.p')
+
 JACCARD_RESULTS = os.path.join(FILE_DIR, 'jaccard_results.txt')
 LSH_RESULTS = os.path.join(FILE_DIR, 'lsh_results.txt')
 COMP_RESULTS = os.path.join(FILE_DIR, 'results.txt')
