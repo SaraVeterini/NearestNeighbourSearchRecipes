@@ -1,5 +1,4 @@
 # ===== Generate MinHash Signatures ===== #
-import os
 import sys
 import time
 import random
@@ -62,7 +61,7 @@ class DocMinHashSignatures(object):
                     # For each shingle in the document...
                     for shingle in shingleSet:
                         # Evaluate the hash function.
-                        hashCode = hash_function(shingle)
+                        hashCode = hash_function(str(shingle))
 
                         # Record the lowest hash code.
                         if hashCode < minHashCode:
@@ -80,8 +79,7 @@ class DocMinHashSignatures(object):
                   % (numHashes, len(dictionary_of_set.keys()), elapsed)
 
             # Store signatures in a file for future uses.
-            if not os.path.exists(definitions.FILE_DIR):
-                os.makedirs(definitions.FILE_DIR)
-            save_binary_file(signatures, definitions.SIGNATURES_FILE)
+            if saveFile:
+                save_binary_file(signatures, definitions.SIGNATURES_FILE)
 
             self.minHashDocuments = signatures

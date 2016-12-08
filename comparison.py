@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 
 import definitions
 
-from utils.loader import save_binary_file, load_binary_file
 from shingling import scraping, shingling
 from minhash import DocMinHashSignatures
 from jaccard import Jaccard
@@ -63,7 +62,10 @@ def compare(lsh_iterations):
     lsh_length = []
     intersections = []
     false_positives = []
+    print '\nRunning %d iterations of MinHash - LSH...' % lsh_iterations
     for i in range(lsh_iterations):
+        print '\n#' + ('='*16) + '#'
+        print 'Iteration #%d' % i
         signatures = DocMinHashSignatures(shingles_map, saveFile=False).minHashDocuments
         lsh_list = Lsh(signatures).lshNeighbours
         intersection = intersect_lists(jaccard_list, lsh_list)
@@ -73,13 +75,18 @@ def compare(lsh_iterations):
 
     ml = (float(sum(lsh_length)) / float(lsh_iterations))
     fp = (float(sum(false_positives)) / float(lsh_iterations))
-    ma = (float(sum(intersections)) / float(lsh_iterations))
 
+    ma = (float(sum(intersections)) / float(lsh_iterations))
+    jl = float(len(jaccard_list))
+
+    plot_results(jaccard_list, lsh_list)
+
+    print '\n#' + ('=' * 16) + '#'
     print '\nLSH Mean false-positives: %f' % (fp / ml)
 
-    print '\nLSH Mean accuracy in LSH: %f' % (ma / ml)
+    print '\nLSH Mean accuracy in LSH: %f' % (ma / jl)
 
-    print '\nEnd'
+    print '\nThe End'
 
 
 if __name__ == '__main__':
