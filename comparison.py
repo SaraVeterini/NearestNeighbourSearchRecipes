@@ -62,13 +62,17 @@ def compare(lsh_iterations):
     lsh_length = []
     intersections = []
     false_positives = []
-    print '\nRunning %d iterations of MinHash - LSH...' % lsh_iterations
+    print '\nRunning %d iterations of MinHash - LSH ...' % lsh_iterations
     for i in range(lsh_iterations):
-        print '\n#' + ('='*16) + '#'
-        print 'Iteration #%d' % i
+        print '\n#' + ('='*30) + '#'
+        print 'Iteration #%d' % (i + 1)
+        # compute signatures
         signatures = DocMinHashSignatures(shingles_map, saveFile=False).minHashDocuments
+        # compute LSH
         lsh_list = Lsh(signatures).lshNeighbours
+        # check the intersection between the Jaccard results and the current LSH iteration
         intersection = intersect_lists(jaccard_list, lsh_list)
+
         lsh_length.append(len(lsh_list))
         intersections.append(len(intersection))
         false_positives.append(len(lsh_list) - len(intersection))
