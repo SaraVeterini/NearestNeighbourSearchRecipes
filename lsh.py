@@ -31,7 +31,8 @@ class Lsh(object):
                         # calculate hashes for each document
                         hash_doc1 = hash(str(minhash_list1[i*R:(i+1)*R]))
                         hash_doc2 = hash(str(minhash_list2[i*R:(i+1)*R]))
-                        # 2 documents are candidates if their subvector is the same in at least one band
+                        # 2 documents are candidates if their subvector
+                        # is the same in at least one band
                         if hash_doc1 == hash_doc2:
                             candidates_list.append((doc_id1, doc_id2))
                             break

@@ -2,10 +2,7 @@ import time
 
 import definitions
 
-
-def compute_jaccard_index(set_1, set_2):
-    n = len(set_1.intersection(set_2))
-    return n / float(len(set_1) + len(set_2) - n)
+from utils.loader import save_binary_file, load_binary_file
 
 
 class Jaccard(object):
@@ -18,20 +15,32 @@ class Jaccard(object):
         :param shingles_map: dictionary of shingles.
         """
         print '\nComputing Jaccard Similarity...'
-        file_result_jaccard = open(definitions.JACCARD_RESULTS, 'w')
-        t0 = time.time()
-        neigh = []
 
-        for key1, set1 in shingles_map.iteritems():
-            for key2, set2 in shingles_map.iteritems():
-                if key2 > key1:
-                    n = len(set1.intersection(set2))
-                    sim = n / float(len(set1) + len(set2) - n)
-                    if sim >= 0.8:
-                        neigh.append((key1, key2))
-                        file_result_jaccard.write(str((key1, key2)) + '\n')
+        # Check whether the jaccard similarity have been already computed.
+        jaccard = load_binary_file(definitions.JACCARD_FILE)
 
-        file_result_jaccard.close()
-        elapsed = time.time() - t0
-        print 'Jaccard similarity of %d documents computed in %f seconds' % (len(shingles_map.keys()), elapsed)
-        self.jaccardNeighbours = neigh
+        if jaccard is not None:
+            self.jaccardNeighbours = jaccard
+            print 'Jaccard similarity file loaded.'
+
+        else:
+            file_result_jaccard = open(definitions.JACCARD_RESULTS, 'w')
+            t0 = time.time()
+            neigh = []
+
+            for key1, set1 in shingles_map.iteritems():
+                for key2, set2 in shingles_map.iteritems():
+                    if key2 > key1:
+                        n = len(set1.intersection(set2))
+                        sim = n / float(len(set1) + len(set2) - n)
+                        if sim >= 0.8:
+                            neigh.append((key1, key2))
+                            file_result_jaccard.write(str((key1, key2)) + '\n')
+
+            elapsed = time.time() - t0
+            file_result_jaccard.close()
+            print 'Jaccard similarity of %d documents computed in %f seconds' \
+                  % (len(shingles_map.keys()), elapsed)
+
+            save_binary_file(neigh, definitions.JACCARD_FILE)
+            self.jaccardNeighbours = neigh

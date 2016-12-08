@@ -25,13 +25,6 @@ def compare():
     lsh_list = Lsh(sign).lshNeighbours
     print len(lsh_list)
 
-    result = lsh_list.intersection(jaccard_list)
-
-    file_result = open(definitions.COMP_RESULTS, 'w')
-    for item in result:
-        file_result.write(str(item))
-    file_result.close()
-
 
 if __name__ == '__main__':
     compare()
