@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import definitions
 
 from shingling import scraping, shingling
-from minhash import DocMinHashSignatures
+from minhash import DocMinHashSignatures, N
 from jaccard import Jaccard
-from lsh import Lsh
+from lsh import Lsh, B, R
 
 
 def plot_results(jaccard, lsh):
@@ -50,7 +50,7 @@ def intersect_lists(list1, list2):
 
 def compare(lsh_iterations):
     files = os.listdir(definitions.RECIPES_FOLDER)
-    print 'Number of Documents: %d' % len(files)
+    print '\nNumber of Documents: %d' % len(files)
 
     # compute shingling.
     shingles_map = shingling(files, scraping, hashed=False)
@@ -62,7 +62,10 @@ def compare(lsh_iterations):
     lsh_length = []
     intersections = []
     false_positives = []
-    print '\nRunning %d iterations of MinHash - LSH ...' % lsh_iterations
+    print '\nNumber of Hash function used with LSH: %d' % N
+    print 'Band parameter B: %d' % B
+    print 'Rows parameter R: %d' % R
+    print 'Running %d iterations of MinHash - LSH ...' % lsh_iterations
     for i in range(lsh_iterations):
         print '\n#' + ('='*30) + '#'
         print 'Iteration #%d' % (i + 1)
@@ -94,4 +97,4 @@ def compare(lsh_iterations):
 
 
 if __name__ == '__main__':
-    compare(2)
+    compare(5)
