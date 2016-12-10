@@ -47,7 +47,7 @@ def compare(lsh_iterations):
 
         lsh_length.append(len(lsh_list))
         intersections.append(len(intersection))
-        false_positives.append(len(lsh_list) - len(intersection))
+        false_positives.append(max(len(lsh_list) - len(intersection), 0))
 
     ml = (float(sum(lsh_length)) / float(lsh_iterations))
     fp = (float(sum(false_positives)) / float(lsh_iterations))
@@ -60,8 +60,6 @@ def compare(lsh_iterations):
 
     print '\nLSH Mean accuracy in LSH: %f' % (ma / jl)
 
-    print '\nThe End'
-
 
 if __name__ == '__main__':
-    compare(3)
+    compare(5)
